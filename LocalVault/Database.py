@@ -112,15 +112,3 @@ class Database():
 
         """
         return False
-
-def main():
-    db = Database()
-    db.deleteDatabase()
-    db.createDatabase()
-    db.set("mk1", "val1")
-    #db.set("mk2", "val2")
-    #db.set("mk3", "val3")
-    db.set("mk1", "val1b")
-
-if __name__ == '__main__':
-    main()
