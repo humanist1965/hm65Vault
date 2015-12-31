@@ -1,11 +1,6 @@
-import json
+import re
 
-obj = {}
-obj['f1'] = 1
-obj['f2'] = 2
-
-s = json.dumps(obj)
-
-obj2 = json.loads(s)
-
-print(obj2)
+tagToSearch = "t" + "[^ ]*[ ]"
+res = re.findall(tagToSearch, "tag1 tag2 tag3 ", re.IGNORECASE)
+print(type(res))
+print(res)

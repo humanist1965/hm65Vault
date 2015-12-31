@@ -1,6 +1,7 @@
 import LocalVault.Database as data
 import hashlib
 import json
+import re
 import pdb
 
 class hm65Vault():
@@ -141,14 +142,22 @@ class hm65Vault():
 			resDict[itemKey] = cc
 
 
+	def listTagsAnywhere(self, tagPattern, context=None):
+		tagPattern = r"[^\b]"+tagPattern
+		return self.listTags(tagPattern, context)
+
 	def listTags(self, tagPattern, context=None):
 		'''
 		Find tags that match the tagPattern.
 		context is the scope to search for tags in and is a dictionary of item keys
 		'''
 		tagsStr = self._buildSearchString(context)
-		self._matchTags(tagPattern)
-		return tagsStr
+		matchList = self._matchTags(tagPattern)
+		tidyList = []
+		for it in matchList:
+			it = it.strip()
+			tidyList.append(it)
+		return tidyList
 		
 
 	def _buildSearchString(self, context):
@@ -198,7 +207,11 @@ class hm65Vault():
 		return resSet
 
 	def _matchTags(self, tagPattern):
-		pass
+		# search self.TAGS_SEARCH_STR for tags matching tagPattern
+		tagToSearch = r"\b" + tagPattern + "[^ ]*[ ]"
+		res = re.findall(tagToSearch, self.TAGS_SEARCH_STR, re.IGNORECASE)
+		return res
+		
 		
 	def getDB(self):
 		db = data.Database(self.DATABASE_NAME)

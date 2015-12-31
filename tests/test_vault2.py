@@ -76,10 +76,13 @@ class VaultTest2(unittest.TestCase):
       key3 = vt.addItem(item3)
       key4 = vt.addItem(item4)
       key5 = vt.addItem(item5)
-      self.assertEqual(vt.listTags("t"),"tag1 tag10 tag11 tag12 tag13 tag2 tag3 tag7 tag8 tag9 ")
-      self.assertEqual(vt.listTags("t",["tag1"]),"tag2 tag3 ")
-      self.assertEqual(vt.listTags("t",["tag6"]),"")
-      self.assertEqual(vt.listTags("t",["tag7"]),"tag10 tag11 tag12 tag13 tag8 tag9 ")
+      self.assertEqual(vt.listTags("t"),['tag1', 'tag10', 'tag11', 'tag12', 'tag13', 'tag2', 'tag3', 'tag7', 'tag8', 'tag9' ])
+      self.assertEqual(vt.listTags("t",["tag1"]),['tag2', 'tag3'])
+      self.assertEqual(vt.listTags("t",["tag6"]),[])
+      self.assertEqual(vt.listTags("t",["tag7"]),['tag10', 'tag11', 'tag12', 'tag13', 'tag8', 'tag9'])
+      self.assertEqual(vt.listTags("x",["tag7"]),[])
+      self.assertEqual(vt.listTags("TaG1",["tag7"]),['tag10', 'tag11', 'tag12', 'tag13'])
+      self.assertEqual(vt.listTagsAnywhere("ag",["tag1"]),['tag2', 'tag3'])
 if __name__ == '__main__':
   # normally you would run as part of a test runner but if you just want to exercise the test in this file
   unittest.main()
