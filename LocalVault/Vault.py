@@ -39,12 +39,19 @@ class hm65Vault():
 
 	def _addTagRelationships(self, tagsList):
 		db = self.getDB()
+		tagsStr = self._serialiseObj(list(tagsList))
 		for it1 in tagsList:
-			for it2 in tagsList:
-				if it1 != it2:
-					dbkey1 = "tagRel/" + it1 + "/" + it2
-					if db.get(dbkey1) is None:
-						db.set(dbkey1, 1)
+			dbkey1 = "tagRel/" + it1 
+			keyPair = db.get(dbkey1)
+			if keyPair is None:
+				db.set(dbkey1, tagsStr)
+			else:
+				# If a tagRel exists already then update it
+				tagsList2 = set(tagsList)
+				oldRelList = self._deserialiseObj(keyPair[1])
+				tagsList2.update(oldRelList)
+				tagsStr2 = self._serialiseObj(list(tagsList2))
+				db.set(dbkey1, tagsStr2)
 
 	def _removeExistingTags(self, itemKey):
 		oldItem = self.getItem(itemKey)
@@ -172,13 +179,16 @@ class hm65Vault():
 			db = self.getDB()
 			resDict = {}
 			for tag in context:
-				dbkey1 = "tagRel/" + tag + "/"
+				dbkey1 = "tagRel/" + tag 
 				results = db.list(dbkey1)
-				for (key, _) in results:
-					tagName = key[len(dbkey1):]
-					count = resDict.get(tagName,0)
-					count += 1
-					resDict[tagName] = count
+				for (key, val) in results:
+					relTags = self._deserialiseObj(val)
+					for tagName in relTags:
+						if tagName==tag:
+							continue
+						count = resDict.get(tagName,0)
+						count += 1
+						resDict[tagName] = count
 			contextCount = len(context)
 			# Results are the ones that matched all context items
 			for (key,val) in resDict.items():
