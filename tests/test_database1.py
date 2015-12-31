@@ -114,11 +114,35 @@ class DatabaseTest2(unittest.TestCase):
       results = db.list("%user[uniqueUserId]%")
       self.assertEqualUnordered(results,[("root.customer[4].user[uniqueUserId]", "{f1:val3.1,f2:val3.2}")])
 
-  def test_getResultSet(self):
+  def test_rm(self):
       db = data.Database()
       db.deleteDatabase()
       db.createDatabase()
-      self.assertTrue(db.getResultSet("root.customer"))
+      d = { "mk1": "val1",
+            "mk2": "val2",
+            "mk3": "val3"}
+      db.set(d)
+      db.rm("mk1")
+      db.rm("mk2")
+      db.rm("mk3")
+      mk1 = db.get("mk1")
+      mk2 = db.get("mk2")
+      mk3 = db.get("mk3")
+      self.assertEqual([mk1,mk2,mk3],[None,None,None])
+
+  def test_rm2(self):
+      db = data.Database()
+      db.deleteDatabase()
+      db.createDatabase()
+      d = { "mk1": "val1",
+            "mk2": "val2",
+            "mk3": "val3"}
+      db.set(d)
+      db.rm(d)
+      mk1 = db.get("mk1")
+      mk2 = db.get("mk2")
+      mk3 = db.get("mk3")
+      self.assertEqual([mk1,mk2,mk3],[None,None,None])
 
 
 if __name__ == '__main__':

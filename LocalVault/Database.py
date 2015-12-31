@@ -89,6 +89,32 @@ class Database():
         for (key,value) in dict.items():
             self.set(key,value,dbConn)
 
+
+    def rm(self, keyOrDict, dbConn=None):
+        """
+        Removes the key from the database
+
+        ARGS:
+
+        keyOrDict - Key or dict to remove. 
+        """
+        if isinstance(keyOrDict ,dict):
+            self._rmFromDict(keyOrDict, dbConn)
+            return
+        else:
+            key = keyOrDict
+
+        con = self.doDBConnect(dbConn)
+        if not(self.get(key,dbConn) is None):
+            with con:
+                cur = con.cursor()    
+                cur.execute("DELETE FROM KeyValue WHERE Key=?", (key,))        
+                con.commit()
+
+    def _rmFromDict(self, dict, dbConn=None):
+        for (key,value) in dict.items():
+            self.rm(key,dbConn)
+        
     def list(self, keyPat, dbConn=None):
         """
         finds all the keys that match keyPat.

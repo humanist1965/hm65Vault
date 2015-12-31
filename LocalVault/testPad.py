@@ -1,6 +1,11 @@
-keypat = "this is it%"
-pos = keypat.find("%")
-print(pos)
+import json
 
-keypat = keypat if keypat.find("%") != -1 else keypat + "%"
-print(keypat)
+obj = {}
+obj['f1'] = 1
+obj['f2'] = 2
+
+s = json.dumps(obj)
+
+obj2 = json.loads(s)
+
+print(obj2)
